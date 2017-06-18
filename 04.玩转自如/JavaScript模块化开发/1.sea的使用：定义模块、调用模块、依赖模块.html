@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+<script src="sea/sea.js"></script>
+</head>
+
+<body>
+<p>
+1.js模块化：
+
+  当网站开发越来越复杂的时候，经常遇到冲突和依赖的问题，由此引出sea.js库
+
+  冲突：变量或函数命名冲突
+
+  依赖：js之间有依赖关系的时候
+</p>
+
+<p>
+2.seajs库
+	
+  提升代码的可维护性，实现js模块化	
+</p>
+
+<p>
+3.seajs使用
+
+  查看github的API
+
+    定义模块：define
+    调用模块：
+    		  export 
+    		  seajs.use
+    依赖模块：require	
+</p>
+<script>
+
+
+// 定义模块在module1.js里面
+
+// 调用模块：
+
+seajs.use('./js/module1.js',function(ex){ //两个参数 : 第一个参数 : 模块的地址  第二个参数 : 回调函数
+
+	//sea的默认根目录 : sea.js这个文件所在目录，所以用相对于sea.js的路径
+	
+	ex.show(); //1
+	
+	//其他人命名一样也可以使用，解决命名冲突问题
+	show();  //2
+	function show(){
+		alert('解决命名冲突问题'+2);
+	}
+	
+});
+
+// 依赖模块在module2.js里面，module2.js依赖module3.js：
+seajs.use('./js/module2.js',function(ex){
+	
+	ex.show();  //3
+	
+	show();  //4
+	
+	function show(){
+		alert('解决模块依赖'+4);
+	}
+	
+});
+
+
+</script>
+</body>
+</html>
