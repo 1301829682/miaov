@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+<style>
+
+.box{width:100px;height:100px;background:Red;margin:100px auto; transition:5s;}
+/*变换基点*/
+.box2{width:100px;height:100px;background:Red;margin:100px auto; transition:5s; -webkit-transform-origin:right bottom;}
+.box3{width:100px;height:100px;background:Red;margin:100px auto; transition:5s; -webkit-transform-origin:100px 100px;}
+.box:hover,.box2:hover,.box3:hover{ -webkit-transform:rotate(360deg) scale(0.2);}
+</style>
+</head>
+<body>
+<div class="box">transform变换</div>
+<div class="box2">rotate改变旋转基点</div>
+<div class="box3">rotate改变旋转基点用具体值</div>
+</body>
+</html>
