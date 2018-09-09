@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+	<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+	<script type=text/javascript charset=utf-8 src=jquery-1.8.0.min.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+// 桥模式-特权函数：访问私有变量的函数
+	var PublicClass1 = function(){
+		var name = "张三";
+		//name通过var变成了私有变量，外部想要访问，getName就是特权函数
+		this.getName = function(){
+			return name;
+		}
+	}
+	var p1 = new PublicClass1();
+	alert(p1.getName());
+
+	var PublicClass2 = function(){
+		// 私有化的变量
+		var privateMethod = function(){
+			alert('执行了一个很复杂的操作...');
+		};
+		// 也可以单元测试，自己可以被外部访问，又可以独立运行起来
+		privateMethod();
+		
+		// 通过特权函数去访问这个私有的独立单元
+		this.bridgeMethod = function(){
+			return privateMethod();
+		}
+	};
+			
+	var p2 = new PublicClass2();
+	p2.bridgeMethod();
+
+
+
+// 桥模式：用桥把多个单体组织在一起	
+	// 使每个单元都能独立化,可以实现自己的变化
+	var Class1 = function(a,b,c){
+		this.a = a ; 
+		this.b = b ; 
+		this.c = c ;
+	};
+	
+	var Class2 = function(d,e){
+		this.d = d ; 
+		this.e = e ; 
+	};
+	// BridgeCalss将Class1和Class2组织在一起，而Class1和Class2又可以独立编程
+	var BridgeCalss = function(a,b,c,d,e){
+		this.class1 = new Class1(a,b,c);
+		this.class2 = new Class2(d,e);
+	};
+</script>
+</body>
+</html>

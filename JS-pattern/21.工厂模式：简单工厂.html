@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+	<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+/*工厂模式：核心就是为了生产对象，实现解耦
+对于javaScript而言，一个类或对象中往往会包含别的对象，我们创建这样成员对象时，可能习惯采用new关键字或构造函数的方式，这样会导致两个类之间产生依赖关系，所以我们通常要需要工厂模式，创建一个工厂来管理他们的实例过程
+*/
+
+//实现卖不同的车
+// 简单工厂模式调用工厂单例模式的生产方法
+// --------------------------------------------------------
+	// 卖车的商店
+	function CarShop(){};
+	CarShop.prototype = {
+		constructor : CarShop,
+		sellCar : function(type){
+			var car = CarFactory.createCar(type); //调用工厂生产
+			return car;
+		}
+	}
+
+	//生产车的工厂 单体模式
+	var CarFactory = {
+		createCar : function(type){
+			var car;//声明一个变量保存实例对象，用来传入检测接口的方法中验证方法实现了没有
+			switch(type){
+				case 'Bmw':
+					car = new Bmw();
+					break;
+				case 'Audi':
+					car = new Audi();
+					break;
+			}
+			//检验接口的实现
+			BH.Interface.ensureImplements(car,CarInterface);
+			// 检验通过才允许返回属性和方法
+			return car;
+		}
+	}
+// --------------------------------------------------------
+
+	// SuperClass
+	function BaseCar(){};
+	BaseCar.prototype = {
+		constructor : BaseCar,
+		start : function(){alert(this.constructor.name+' start');},
+		run : function(){alert(this.constructor.name+' run')}
+	}
+
+	//Class Bmw Audi都是车
+	function Bmw(){};
+	BH.extend(Bmw,BaseCar);
+	Bmw.prototype.driveBmw = function(){alert('Bmw is driving')};
+
+	function Audi(){};
+	BH.extend(Audi,BaseCar);
+
+	// 实例化接口对象，第一个参数为命名的接口名，第二个参数为实现的方法；接着返回sellCar()检验接口的实现
+	var CarInterface = new BH.Interface('CarInterface',['start','run']);
+
+
+
+	// 检查效果
+	var shop = new CarShop();
+	var car = shop.sellCar('Bmw');
+	car.start();
+	car.run();
+	car.driveBmw();
+</script>
+</body>
+</html>

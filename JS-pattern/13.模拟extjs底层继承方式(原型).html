@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+	// 混合继承的缺点：继承了父类的2次模版, 继承了一次父类的原型对象,效率低
+	// 下面模拟extjs自己写extend方法: 继承1次父类的模版 继承一次父类的原型对象
+
+		//extend只实现原型继承
+		function extend(sub ,sup){
+			 var F = new Function();	// 1 创建一个空函数：进行中转
+			 F.prototype = sup.prototype; // 2 把父类的原型对象赋给空函数的原型对象
+			 sub.prototype = new F(); 	// 3 原型继承
+			 sub.prototype.constructor = sub ; // 4还原子类的构造器
+			 //保存一下父类的原型对象: 一方面方便降低耦合性  另一方面方便获得父类的原型对象
+			 sub.superClass = sup.prototype; //自定义一个子类的静态属性 接受父类的原型对象
+			 //判断父类的原型对象的构造器 (加保险)
+			 if(sup.prototype.constructor == Object.prototype.constructor){
+			 	sup.prototype.constructor = sup ; //手动还原父类原型对象的构造器
+			 }
+		}
+			
+			
+		// 混合继承：原型继承和借用构造函数继承
+		function Person( name , age){
+			this.name = name ; 
+			this.age = age ; 
+		}
+		Person.prototype = {
+			constructor: Person ,
+			sayHello: function(){
+				alert('hello world!');
+			}
+		};
+			
+		function Boy(name , age , sex){
+			//call构造函数继承 只复制了父类的模版
+			Boy.superClass.constructor.call(this , name , age); //用保存的父类的原型对象Boy.superClass降低耦合性，Boy.superClass.constructor为父类的构造函数
+			this.sex = sex ;
+		}
+		//原型继承的问题: 即继承了父类的模版 又继承了父类的原型对象
+		//Boy.prototype = new Person();
+		// extend只继承一遍父类的原型对象
+		extend(Boy , Person);
+			
+
+		var b = new Boy('张三' , 20 , '男');
+		alert(b.name); 
+		alert(b.sex);
+
+		//覆盖父类的方法，如果还想用父类方法，则用保存的父类的原型对象Boy.superClass
+		Boy.prototype.sayHello = function(){
+			alert('我覆盖了父级的方法');
+		}
+		Boy.superClass.sayHello.call(b);
+			
+
+</script>
+
+</body>
+</html>

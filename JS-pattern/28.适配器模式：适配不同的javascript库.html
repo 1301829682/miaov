@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+/* 
+	适配器模式：适配器模式可用来在现有的接口和不兼容的类之间进行适配。使用这种模式的对象又叫做包装器（wrapper），因为他们是在用一个新的接口包装另一个对象。借助适配器可以处理一些类与API不匹配、不能一同使用的情况。
+	注意适配器和门面虽然比较类似，但是门面模式只是为了简化一个接口，它并不是提供额外的选择，适配器则要把一个接口转换为另一个接口，它并不会滤除某些能力，也不会简化接口。
+*/
+
+	// 企业开发中：YAHOO和Prototype两种js框架，用YAHOO的框架，但是Prototype框架程序员还是想用原来的API写法，这里就用到了适配器模式
+
+	// 例子：现在用适配器模式根据id获取dom元素用YAHOO框架适配Prototype框架
+
+		//Prototype $或function获取dom (不需要传递任何的形参；传递实参：一个id写一个参数；多个id多个参数)
+		function $(){
+			var elements = [];
+			for(var i=0; i<arguments.length; i++){
+				var element = arguments[i];
+				if(typeof element == 'string'){
+					element = document.getElementById(element);
+				}
+				elements.push(element);
+			}
+			return elements;
+		}
+
+		// YAHOO get获取dom (传递一个形参；传递实参：字符串或数组)
+		var YAHOO = {};
+		YAHOO.get = function(el){
+			if(typeof el == 'string'){
+				return document.getElementById(el);
+			}
+			if(el instanceof Array){
+				var elements = [] ;
+				for(var i = 0 ; i < el.length ; i++){
+					elements[elements.length] = YAHOO.get(el[i]);
+				}
+				return elements;
+			}
+			if(el){
+				return el ; 
+			}
+			return null;
+		}
+
+
+		// YAHOO框架适配prototype框架
+		YAHOO.get =  YUIToPrototypeAdapter ;
+		function YUIToPrototypeAdapter(){
+		  	//对于YAHOO开发人员来说 永远传递一个参数
+			if(arguments.length == 1){
+				var e = arguments[0];
+				return  $.apply(window,e instanceof Array?e:[e]);
+			} else {
+				return $.apply(window ,arguments);
+			}
+		}
+
+		window.onload = function(){
+			// prototype框架开发人员习惯的写法
+			var Prototype1 = $('inp1');
+			var Prototype2 = $('inp1','inp2');
+			alert('prototype'+Prototype1);alert('prototype'+Prototype2);
+
+			// YAHOO开发人员习惯的写法
+			var YAHOO1 = YAHOO.get('inp1');
+			var YAHOO2 = YAHOO.get(['inp1','inp2']);		
+			alert('YAHOO'+YAHOO1);alert('YAHOO'+YAHOO2);
+
+
+			// 一个prototype框架使用者，用YAHOO框架的时候还是用原来prototype框架API的写法
+			var blend = YAHOO.get('inp1','inp2');
+			alert(blend);
+		}
+
+</script>
+
+<input id="inp1" />
+<input id="inp2" />
+</body>
+</html>

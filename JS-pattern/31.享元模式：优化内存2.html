@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+//享元模式：优化的设计模式 (优化：时间[代码的运行时间]、空间[web浏览器内存])
+				
+
+	//享元模式：内在数据static (出厂商、型号、出厂日期)是共用的，静态的；外在数据(拥有者、车牌号、最近登记日期)是不同的	
+	
+	//出厂商、型号、出厂日期、拥有者、车牌号、最近登记日期
+	var Car = function(make ,model , year){
+		this.make = make ; 
+		this.model = model ; 
+		this.year = year ; 
+	};
+	Car.prototype = {
+		constructor:Car  , 
+		getMake :function(){
+			return this.make;
+		},
+		getModel:function(){
+			return this.model;
+		},
+		getYear:function(){
+			return this.year;
+		}
+	};
+
+	//工厂模式（闭包工厂）
+	var CarFactory = (function(){
+		var createdCars = {} ;
+		return {
+			createCar : function(make ,model , year ){//只实例化内在数据并且只实例化一次
+				 if(createdCars[make+model+year]){
+				 	return createdCars[make+model+year];//createdCars[make+model+year]只是一个标识，值为后面new出来的car
+				 } else {
+				 	var car = new Car(make ,model , year);
+					createdCars[make+model+year] = car ;
+					return car ;
+				 }
+			}
+		};
+	})();
+
+	//单体模式(外在的数据和内在的数据结合在一起)
+	var CarRecordManager =(function(){
+		var carRecordDataBase = {};//登记记录
+		return {
+			//添加登记记录
+			addCarRecord:function(make ,model , year , owner , tag , renewDate){
+				var car = CarFactory.createCar(make ,model , year);
+				carRecordDataBase[tag] = {
+					owner : owner , 
+					renewDate : renewDate ,
+					car : car 
+				};
+			}					
+		};
+	})();
+
+
+
+	var arr = [] ;
+
+	var stime = new Date().getTime();
+	for(var i = 0 ; i < 5000000; i ++){
+		// arr.push(new Car('上海大众','迈腾','2012-02-03','bhx','bj0011','2013-04-01'));
+		// 普通测试耗时: 734ms  占用内存: 570M
+		// 享元模式测试耗时: 1.5s  占用内存: 230M
+		arr.push(CarRecordManager.addCarRecord('上海大众','迈腾','2012-02-03','bhx','bj0011','2013-04-01'));
+	}
+	var etime = new Date().getTime();
+	alert(etime - stime);
+
+</script>
+</body>
+</html>

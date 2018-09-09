@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+/*责任链（responsibility）模式可以用来消除请求的发送者和接受者之间的耦合。
+责任链模式中的角色：发送者、接受者
+*/
+
+
+/*
+责任链模式的流程：
+发送者知道链中的第一个接受者，它向这个接受者发出请求
+每一个接受者都对请求进行分析，要么处理它，要么往下传递
+每一个接受者知道的其他对象只有一个，即它的下家对象
+如果没有任何接受者处理请求，那么请求将从链上离开，不同的实现对此有不同的反应。
+*/
+
+//下面用责任链模式的流程重构模拟责任链场景：做项目 -> 项目经理 ->task  项目组[小A,小B,小C,小D]
+	//任务的类(发送者)
+		var Assign = function(task){
+			this.task = task;
+		};
+
+	// 接受任务的类(接受者)
+		var WorkFlow = function(assign){
+			this.assign = assign;
+		};
+		WorkFlow.prototype = {
+			constructor : WorkFlow,
+			//分析当前的任务到底谁能去执行
+			handle : function(handler){
+				// for(var i = 0,len = handler.length;i < len;i++){
+					//如果当前任务 适合 就直接执行
+					if(this.assign.task === handler.cando){
+						return handler.todo();
+					}else{//找不到则传递给下一个接受者
+						//用call
+						arguments.callee.call(this,handler.successor); //this指向调用者wf，handler.successor为参数
+					}
+				}
+			// }
+		};
+
+	//处理者
+		var Executor = function(name,cando){
+			this.name = name; //接受者的姓名
+			this.cando = cando; //擅长的任务
+			this.successor = null; // 保留当前接受者的下一个对象的引用
+		};
+		Executor.prototype = {
+			constructor : Executor,
+			todo : function(){
+				document.write(this.name + '开发:' + this.cando);
+			},
+			// 设置责任链的配置函数
+			setSuccessor : function(successor){
+				this.successor = successor;
+			}
+		};
+
+	//实例化4个处理对象
+		var e1 = new Executor('小A','javascript编程');
+		var e2 = new Executor('小B','css编程');
+		var e3 = new Executor('小C','java编程');
+		var e4 = new Executor('小D','sql编程');
+		//设置对象之间的责任链关系
+		e1.setSuccessor(e2);
+		e2.setSuccessor(e3);
+		e3.setSuccessor(e4);
+	//实例化发送者
+		var assign = new Assign('sql编程');
+	//实例化接受者
+		var wf = new WorkFlow(assign);
+		wf.handle(e1);
+</script>
+</body>
+</html>

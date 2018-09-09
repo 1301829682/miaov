@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+	<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+//实现卖不同的车
+	// 卖车的商店
+	function CarShop(){};
+	CarShop.prototype = {
+		constructor : CarShop,
+		sellCar : function(type){
+			var car;//声明一个变量保存实例对象，用来传入检测接口的方法中验证方法实现了没有
+			switch(type){
+				case 'Bmw':
+					car = new Bmw();
+					break;
+				case 'Audi':
+					car = new Audi();
+					break;
+			}
+			//检验接口的实现
+			BH.Interface.ensureImplements(car,CarInterface);
+			// 检验通过才允许返回属性和方法
+			return car;
+		}
+	}
+	
+	//Class Bmw Audi都是车
+	function Bmw(){};
+	Bmw.prototype.start = function(){alert('Bmw start')};
+	// Bmw.prototype.run = function(){alert('Bmw run')};
+
+	function Audi(){};
+	Audi.prototype.start = function(){alert('Audi start')};
+	Audi.prototype.run = function(){alert('Audi run')};
+
+	// 实例化接口对象，第一个参数为命名的接口名，第二个参数为实现的方法；接着返回sellCar()检验接口的实现
+	var CarInterface = new BH.Interface('CarInterface',['start','run']);
+
+
+
+
+	// 检查效果
+	var shop = new CarShop();
+	var car = shop.sellCar('Bmw');
+	car.start();
+	car.run();
+
+</script>
+</body>
+</html>

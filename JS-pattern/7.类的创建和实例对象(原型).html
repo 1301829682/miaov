@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+	// 类的创建方式：工厂模式和构造函数式
+		
+		// 第一种形式：工厂模式 
+		
+		function createPerson(name , sex , age){
+			var obj = new Object();
+			obj.name = name ; 
+			obj.sex = sex ;
+			obj.age = age ;
+			obj.sayName = function(){
+				alert('工厂模式'+this.name);
+			}
+			return obj;
+		}
+		
+		var p1 = createPerson('p1' , '男' , 20);
+		p1.sayName();
+		
+		
+		// 第二种形式：构造函数式
+		// 函数的第一个字母大写 (类的模版)
+		function Person(name , age , sex){
+			this.name = name ;
+			this.age  = age ; 
+			this.sex  = sex ;
+			this.sayName = function(){
+				alert('构造函数式'+this.name);
+			}
+		}
+		
+		var p2 = new Person('p2' , 20 , '男');
+		var p3 = new Person('p3' , 21 , '女');
+		p2.sayName();
+		//alert(p2 == p3); //类的概念:根据模版创建出不同的实例对象 
+
+		alert(p2 instanceof Person);//instanceof判断一个对象是否是一个类的实例
+		alert(p2 instanceof Object);
+		
+
+
+		
+	//创建对象的方式:
+		// 1当作构造函数去使用 ：
+		var obj1 = new Person('obj1' , 20 , '男');
+		// 2作为普通的函数去调用
+		Person('obj2' , 25 , '男');		//在全局环境里定义属性并复制 直接定义在window上
+		alert(name);
+		// 3在另一个对象的作用域中调用，下面的o为另一个对象
+		var o = new Object();
+		// call  applly
+		Person.call(o,'obj3' , 12 , '女');
+		alert(o.name);
+</script>
+
+</body>
+</html>

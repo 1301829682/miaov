@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+	// 3 惰性单体：
+	//和闭包单体相似，区别是惰性单体在闭包单体上改进，用不同的是私有变量控制返回的单体对象；用在底层框架中最多
+
+		var Ext = {};
+		Ext.Base = (function(){
+			//私有变量
+			var uniqInstance1;
+			var uniqInstance2;
+
+			// 代码块1
+			function init1(){
+				var a1 = true;
+				var a2 = 10;
+				var f1 = function(){
+					alert('代码块1惰性单体模式1');
+				};
+				var f2 = function(){
+					alert('代码块1惰性单体模式2');
+				};
+				return{
+					attr1 : a1,
+					attr2 : a2,
+					method1 : function(){
+						return f1();
+					},
+					method2 : function(){
+						return f2();
+					}
+				};
+			}
+			// 代码块2
+			function init2(){
+				var a1 = true;
+				return {
+					attr1 : '代码块2变量',
+				}
+			}
+
+			return{
+				getInstance1 : function(){
+					if (!uniqInstance1) {
+						//如果undefined 创建单体实例
+						uniqInstance1 = init1();
+					}
+					return uniqInstance1; //返回创建单体1
+				},
+
+				getInstance2 : function(){
+					if (!uniqInstance2) {
+						uniqInstance2 = init2();
+					}
+					return uniqInstance2;//返回创建单体2
+				}
+
+			};
+		})();
+		Ext.Base.getInstance1().method1();
+		alert(Ext.Base.getInstance2().attr1);
+	
+
+	// 分支单体 （判断程序的分支 <一般用在浏览器差异的检测>）
+					
+		var Ext2 = {} ;
+		var def =  false ;//定义一个差异化变量，这里不作处理
+		Ext2.More = (function(){
+			var objA = {		// 火狐浏览器 内部的一些配置
+				attr1:'FF属性1'
+				// 属性1 
+				// 属性2 
+				// 方法1 
+				// 方法2
+			} ;
+			var objB = {		// IE浏览器 内部的一些配置
+				attr1:'IE属性1'
+				// 属性1 
+				// 属性2 
+				// 方法1 
+				// 方法2							
+			} ;
+			return (def) ?objA:objB;
+		})();
+		alert(Ext2.More.attr1);
+</script>
+
+</body>
+</html>

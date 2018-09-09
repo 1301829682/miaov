@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+		function Person1(name , age){
+			this.name = name ; 
+			this.age  = age ; 
+			this.sayName = function(){
+				alert(this.name);
+			}
+			
+		}
+		var z1 = new Person1('z1',20);
+		var z2 = new Person1('z2',21);
+		alert(z1.sayName == z2.sayName);     // false
+		//p1.sayName不等于p2.sayName，说明每new一次，sayName便会执行一次，效率低，这里引入prototype概念
+		
+		
+
+	/* prototype：创建每一个函数都有一个prototype属性,这个属性其实是一个指针,而这个指针总指向一个原型对象，
+				  这个原型对象的用途就是将特定(共有)的属性和方法包含在内,起到一个所有实例所共享的作用，提高了效率
+	*/
+		function Person(){
+			
+		}
+		var obj = Person.prototype;
+		obj.name = 'z1';
+		obj.age  = 20 ; 
+		obj.sayName = function(){alert(this.name);};
+		var p1 = new Person();
+		var p2 = new Person();
+		p1.sayName();
+		p2.sayName();
+		alert(p1.sayName == p2.sayName)  //ture 
+		
+
+
+	// 构造函数 原型对象 实例对象 之间的关系
+
+		//构造函数.prototype =  原型对象
+		//原型对象.constructor = 构造函数
+		alert(obj.constructor);
+		//原型对象.isPrototypeOf = 实例对象
+		alert(obj.isPrototypeOf(p1));
+</script>
+
+</body>
+</html>

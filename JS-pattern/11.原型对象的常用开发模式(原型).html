@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+	/*原型存在的问题: 原型对象里的所有属性和方法被所有构造函数实例化出来的对象所共享，
+					  当修改实例化对象的属性，原型对象里面的属性也会被修改，
+					  由此引出组合使用构造函数和原型式
+	*/		
+		/*function Person(){
+		
+		}
+		
+		Person.prototype = {
+			constructor:Person , 
+			name: 'z3' , 
+			age:  20 , 
+			job : '程序员' ,
+			friends : ['李四','王五'] ,
+			sayName : function(){alert('我的名字!')}
+		};
+		
+		
+		var p1 = new Person();
+		var p2 = new Person();	
+		
+		p1.friends.push('赵六');
+		
+		console.log(p1.friends); //['李四','王五','赵六']
+		console.log(p2.friends); //['李四','王五','赵六']，p2.friends也被修改
+		*/
+
+
+	// 下面介绍原型对象的三种常用开发模式：1组合使用构造函数和原型式 2动态原型模式 3稳妥构造函数式
+			
+		// 组合使用原型和构造函数式 (定义一个类，开发时常用的方式)
+			
+			/*function Person(name , age , friends , job){
+				this.name = name ; 
+				this.age  = age ; 
+				this.friends = friends ;
+				this.job = job ;
+			}
+			
+			Person.prototype = {
+				constructor: Person ,
+				sayName : function(){
+					alert(this.name);
+				}
+			};
+			
+			var p1 = new Person('z3' , 20 , ['王五','赵六'] , '技术总监');
+			var p2 = new Person('李四', 25 , ['王五','赵六' ,'赵7'] ,'boss');
+			
+			alert(p1.friends);
+			p1.sayName();
+			alert(p2.friends);
+			p2.sayName();
+			*/
+			
+		//动态原型模式：(让你的代码 都封装到一起)
+			
+			/*function Person(name , age , friends , job){
+				this.name = name ; 
+				this.age  = age ; 
+				this.friends = friends ;
+				this.job = job ;
+				
+				//动态原型：需要判断构造的方法不是function
+				if( typeof this.sayName != 'function'){
+					Person.prototype.sayName = function(){
+						alert(this.name);
+					}
+				}
+			}
+			*/		
+			
+			
+		//稳妥构造函数式: durable object(稳妥对象) 适用于非常安全的环境中
+
+			// 要求：1 没有公共属性 ， 2 不能使用this对象
+			/*function Person(name , age , job){
+				// 创建一个要返回的对象
+				var obj = new Object();
+				//定义一些私有的变量和函数(也就是局部变量和函数，相当于java中的private私有变量)
+				var name = name ; 
+				obj.sayName = function(){
+					alert(name); //不能使用this对象，变量为传入的参数不再公有
+				}
+				return obj ;				
+			}
+			var p1 = new Person('张三');
+			p1.sayName();
+			*/
+			
+			
+</script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+	var name = "xiao A";
+	var obj = {
+	      name : "xiao B" ,
+	      getName: function(){
+			return function(){
+				return this.name;
+			}
+		}
+	};
+	var k = obj.getName();
+	console.log(k); // 结果为 function(){return this.name;}
+	alert(k()); //结果为xiao A，因为obj只能使用同级作用域(一级作用域)的变量name = "xiao A";
+
+
+
+	var name = "xiao A";
+	var obj = {
+	      name : "xiao B" ,
+	      getName: function(){
+		  	// this总是指向调用者
+			var o = this;
+			return function(){
+				return o.name;
+			}
+		}
+	};
+	
+	var k = obj.getName();
+	alert(k()); //结果为xiao B 这里就用到了闭包
+	
+	
+	// 闭包：一个函数 可以访问另外一个函数作用域中的变量
+	// 封闭性 : private 起到一个保护变量的作用
+	// 1 
+	function f(x){		// 2
+		var temp = x ; 		//局部变量	 //temp已经没有被使用	
+		return function(x){		// 3
+			temp += x ;		//  又被使用了						
+			alert(temp);						
+	    }
+	}				
+	var a = f(50);
+	alert(a);
+	
+	a(5); //55			
+	a(10); //65
+	a(20); //85
+</script>
+
+</body>
+</html>

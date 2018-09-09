@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+	// 原型继承 ：让子类的原型对象等于父类的实例
+		//原型继承的特点：即继承了父类的模版，又继承了父类的原型对象；缺点：子类还需要父类的实例传参数
+		
+		// 父类
+		function Person1(name, age){
+			this.name = name ; 
+			this.age  = age ;
+		}
+		// 父类的原型对象属性
+		Person1.prototype.id = 10 ;
+	
+
+		// 子类
+		function Boy1(sex){
+			this.sex = sex ; 
+		}
+		//子类的原型对象等于父类的实例实现继承
+		Boy1.prototype = new Person1('z3'); //子类还需要父类的实例传参数
+		
+		var b1 = new Boy1();
+		alert('继承父类的模版'+b1.name);
+		alert('继承父类的原型对象'+b1.id);
+		
+
+	
+	// 类继承,也叫构造函数继承：通过构造函数里面用call实现继承模板(也叫类)
+		//特点：只继承模版,不继承原型对象
+		
+		// 父类
+		function Person2(name, age){
+			this.name = name ; 
+			this.age  = age ;
+		}
+		// 父类的原型对象属性
+		Person2.prototype.id = 10 ;
+		
+		// 子类
+		function Boy2(name , age , sex){
+			// call apply
+			Person2.call(this,name,age);
+			this.sex = sex ; 
+		}
+		
+		var b2 = new Boy2('张三' , 20 , '男');
+		alert('父类的原型对象并没有继承'+b2.id); //undefined父类的原型对象并没有继承
+		
+		
+	// 原型继承+构造函数继承 = 混合继承
+	
+		// 父类
+		function Person3(name, age){
+			this.name = name ; 
+			this.age  = age ;
+		}
+		// 父类的原型对象属性
+		Person3.prototype.id = 10 ;
+		Person3.prototype.sayName = function(){alert('原型继承父类的原型对象'+this.name);};
+		
+		// 子类
+		function Boy3(name , age , sex){
+			// call apply
+			Person3.call(this,name,age); // 1 构造函数继承父类的模版
+			this.sex = sex ; 
+		}	
+		
+		// 2 原型继承
+		Boy3.prototype = new Person3(); //没有传参数，只继承父类的原型对象，只剩下父类的实例和父类的原型对象的关系了
+		
+		var b3 = new Boy3('李四' , 20 , '男');
+		alert('构造函数继承父类的模版'+b3.name);
+		b3.sayName();
+
+		
+</script>
+
+</body>
+</html>

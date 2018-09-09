@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+/*命令模式是一种封装方法调用的方式,命令模式可以消除调用命令的调用者和执行命令的接受者之间的耦合
+命令模式的主要概念： 调用者只需要执行相应的命令(execute)即可，不需要去关系命令到底怎么执行的
+		             执行者它才真正的去处理这条命令的内部实现
+客户、调用者、接受者
+--客户创建命令 ，调用这个执行命令 ，接受者在命令执行时进行相应的操作	     
+*/
+
+
+	//命令模式分类：简单命令模式、复杂命令模式(不讲)、用闭包去封装命令模式(更加灵活的调用命令)
+	//简单命令模式
+	/*
+		var StartCommod = function(obj){
+			this.ad = obj; //用ad来接收元素obj，传递的参数obj为执行者
+		};
+		StartCommod.prototype.execute = function(){
+			this.ad.start(); //假设的start方法
+		};
+		
+		var StopCommod = function(obj){
+			this.ad = obj;
+		};
+		StopCommod.prototype.execute = function(){
+			this.ad.stop();
+		};		
+		
+		var startCommand = new StartCommod(obj); //客户创建命令 ，调用这个执行命令
+		startCommand.execute();	//调用者只需要执行相应的命令(execute)即可
+		var stopCommand = new StartCommod(obj);	
+		stopCommand.execute();
+	*/
+
+	//闭包命令模式：
+	/*
+		function MakeStart(obj){
+			return function(){
+				obj.start();
+			};
+		};
+		function MakeStop(obj){
+			return function(){
+				obj.stop();	
+			};
+		}
+		
+		var startCommand = new MakeStart(obj);
+		startCommand();	//命令开启了
+		var stopCommand = new MakeStop(obj);
+		stopCommand(); //命令结束了
+	*/
+
+</script>
+</body>
+</html>

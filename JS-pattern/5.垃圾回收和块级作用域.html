@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<div>
+	javascript是一门具有自动垃圾收集机制的编程语言。开发人员不必关心内存分配和回收问题。
+		离开作用域的值将被自动标记为可以回收，因此将在垃圾收集期间被删除。标记清除是目前主流的垃圾收集算法。这种算法的思想是给当前不使用的值加上标记，然后回收其内存。
+	
+	javascript里面没有块级作用域的概念，和C、JAVA等高级语言不同。所以在使用if、for时候要格外的小心。但是可以用javascript模拟块级作用域
+
+</div>
+<script type=text/javascript charset=utf-8>
+//垃圾收集方法：标记方法
+
+	function test1(){
+		 var a = 10 ; 	//执行时标记被使用   
+		 var b = 20 ;	//执行时标记被使用
+		 var c ;
+	}
+	test1(); //执行完毕之后 a、b又被标记了一次 :没有被使用，被回收
+
+		
+		
+//块级作用域的概念
+		
+		
+	//高级程序语言for if有块级作用域，js没有块级作用域的概念
+
+	function test2(){
+		for(var i = 1 ; i <=5; i++){  //i
+			alert(i);
+		}
+		alert(i);  //会弹出1.2.3.4.5.6并且没对i报错，没有被回收
+	}
+	test2();
+		
+
+	// js中()表示执行，模拟块级作用域
+	(function(){alert('我直接执行了!');})();//会自动执行
+	
+	function test3(){
+		(function(){
+			for(var i = 1 ; i <=5; i++){  //i
+				alert(i);
+			}						
+		})();
+		alert(i); ////会弹出1.2.3.4.5并且报错i is not defined，被回收
+	}
+	test3();
+</script>
+
+</body>
+</html>

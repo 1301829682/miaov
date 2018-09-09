@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type=text/javascript charset=utf-8>
+/*  arguments 对象 可以访问函数的实际参数，arguments.length表示实参个数，arguments[i]表示实参的值
+	arguments 对象 只能在函数的内部访问和使用
+	arguments.callee 指向函数本身
+	arguments.callee 用的最多的是递归操作，不直接调用函数递归避免存在的bug
+*/
+
+	//函数的形式参数
+	function test(a,b,c,d){
+		//alert(test.length);		// 4个 形参个数
+
+		//alert(arguments.length);
+		//alert(arguments[0]);
+
+		if(arguments.callee.length == arguments.length){ //用arguments.callee和arguments判断形参和实参个数
+			return a+b;
+		} else {
+			return '参数个数不正确!';
+		}
+		
+	}
+	alert(test(10,20));	//函数的实际参数 内部就是用一个数组去接受函数的实际参数
+
+	
+
+	//arguments对象 用的最多的还是递归操作
+	//arguments.callee指向函数自己本身(指向当前函数体)
+    function fact(num){
+		if(num <=1) return 1 ;
+		else  return num*arguments.callee(num-1); //这里不用num*fact(num-1)避免存在的bug
+	}
+
+// ------------------------------------------------------
+	// 递归不用arguments.callee调用函数自己本身的bug
+	function fact2(num){
+		if(num <=1) return 1 ;
+		else  return num*fact2(num-1);
+	}
+	var F = fact2; //继承
+	fact2 = null; //fact2被覆盖，下面的alert会报错fact2 is not a function，用arguments.callee调用本身则不会报错
+	alert(F(5));
+
+</script>
+</head>
+<body>
+</body>
+</html>

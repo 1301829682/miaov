@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+	<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+//实现卖不同的车
+// 细粒度和粗粒度 工厂模式在原来CarShop的基础上细分
+// --------------------------------------------------------
+	// 卖车的商店
+	// Super class，里面用到抽象类
+	function CarShop(){};
+	CarShop.prototype = {
+		constructor : CarShop,
+		sellCar : function(type){
+			// var car = CarFactory.createCar(type);
+			// return car;
+			this.abstractSellCar(type);//这里用到抽象类
+		},
+		abstractSellCar : function(){
+			throw new Error('this method is abstract');
+		}
+	}
+
+	//Bmw 卖车4s店
+	function BmwCarShop(){};
+	// 继承父类
+	BH.extend(BmwCarShop,CarShop);
+	// 子类重写父类抽象类的方法sellCar(因为父类的抽象方法无法实现卖车功能)
+	BmwCarShop.prototype = {
+		constructor : BmwCarShop,
+		//重写sellCar方法
+		sellCar : function(type){
+			var car = CarFactory.createCar(type);
+			return car;
+		}
+	}
+	//Audi 卖车4s店
+	function AudiCarShop(){};
+	BH.extend(AudiCarShop,CarShop);
+	AudiCarShop.prototype = {
+		constructor : AudiCarShop,
+		sellCar : function(){
+			var car = CarFactory.createCar(type);
+			return car;
+		}
+	}
+
+
+	//生产车的工厂 单体模式
+	var CarFactory = {
+		createCar : function(type){
+			var car;//声明一个变量保存实例对象，用来传入检测接口的方法中验证方法实现了没有
+			switch(type){
+				case 'Bmw':
+					car = new Bmw();
+					break;
+				case 'Audi':
+					car = new Audi();
+					break;
+			}
+			//检验接口的实现
+			BH.Interface.ensureImplements(car,CarInterface);
+			// 检验通过才允许返回属性和方法
+			return car;
+		}
+	}
+// --------------------------------------------------------
+
+
+
+	// SuperClass
+	function BaseCar(){};
+	BaseCar.prototype = {
+		constructor : BaseCar,
+		start : function(){alert(this.constructor.name+' start');},
+		run : function(){alert(this.constructor.name+' run')}
+	}
+
+	//Class Bmw Audi都是工厂生产的车
+	function Bmw(){};
+	BH.extend(Bmw,BaseCar);
+	Bmw.prototype.driveBmw = function(){alert('Bmw is driving')};
+
+	function Audi(){};
+	BH.extend(Audi,BaseCar);
+
+	// 实例化接口对象，第一个参数为命名的接口名，第二个参数为实现的方法；接着返回sellCar()检验接口的实现
+	var CarInterface = new BH.Interface('CarInterface',['start','run']);
+
+
+
+
+// --------------------------------------------------------
+	// 检查效果
+	// var shop = new CarShop();
+	// var car = shop.sellCar('Bmw');
+	var shop1 = new BmwCarShop(); //不再使用抽象类CarShop,而是具体哪个店(细粒度)=>var shop2 = new AudiCarShop()
+	var car = shop1.sellCar('Bmw');
+	car.start();
+	car.run();
+	car.driveBmw();
+// --------------------------------------------------------
+</script>
+</body>
+</html>

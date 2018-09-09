@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+
+	// 单体模式（singleton）：不使用new,直接定义对象
+		// 1 简单单体模式：
+		// 不使用new,直接定义对象；简单单体模式缺点：里面的变量没有私有化(var)，能够直接被外部访问，由此引出后面闭包单体模式
+			
+			var Singleton1 = {
+				attr1 : true,
+				attr2 : 10,
+				method1 : function(){
+					alert('简单单体模式1');
+				},
+				method2 : function(){
+					alert('简单单体模式2');
+				}
+			}
+			alert('简单单体模式缺点：attr1能够直接被外部访问'+Singleton1.attr1); //attr1能够直接被外部访问
+
+			// 补充 ：划分命名空间 (区分代码) 比如ext框架的前缀Ext.Manager.attr1/method1
+			
+			var BHX1 = {};
+			BHX1.Singleton = {
+				attr1: true , 
+				attr2: 10 ,
+				method1 : function(){
+					alert('我是命名空间1');
+				},
+				method2 : function(){
+					alert('我是命名空间2');
+				}				
+			};
+			BHX1.Singleton.method1();//前缀BHX能够起到区分作用
+		
+		// 2 闭包单体模式 ：
+		// 用一个匿名函数实现闭包，用return返回变量和方法；闭包里面的变量和方法变成了私有化；闭包主要的目的：保护数据
+
+			// 命名空间
+			var BHX2 ={};
+			BHX2.Singleton = (function(){
+				// 添加自己的私有成员，外部不能够直接访问
+				var a1 = true;
+				var a2 = 10;
+				var f1 = function(){
+					alert('闭包单体模式1');
+				};
+				var f2 = function(){
+					alert('闭包单体模式2');
+				};
+				return{
+					attr1 : a1,
+					attr2 : a2,
+					method1 : function(){
+						return f1();
+					},
+					method2 : function(){
+						return f2();
+					}
+				}
+			})()
+
+			alert('闭包单体模式'+BHX2.Singleton.attr1);
+			BHX2.Singleton.method1();
+			
+	
+
+</script>
+
+</body>
+</html>

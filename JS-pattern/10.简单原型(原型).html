@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+	//简单原型
+		function Person1(){
+			
+		}
+		//简单原型的形式：
+		Person1.prototype = {
+			//constructor : Person ,	//必须表示原型对象的构造器，但是constructor应该不能被枚举，所以用下面的Object.defineProperty()
+			name: 'z3' , 
+			age : 20 , 
+			job : '程序员' ,
+			say : function(){
+				alert('我是原型的函数!');
+			}
+		};
+		
+		// ECMA5 给原型对象重新设置构造器的方法 Object.defineProperty();不过这个用得少，一般还是直接constructor
+		// 兼容到FF4+ ie8+ 
+		// 3个参数  参数1 ：重设构造器的对象   参数2：设置的属性  参数3：options配置项
+		Object.defineProperty(Person.prototype,'constructor',{
+			enumerable : false, //不可枚举
+			value : Person //构造函数
+		})
+
+
+		var p1 = new Person1();
+		alert(Person1.prototype.constructor); // 没有重设构造器之前结果为Object() { [native code] },说明constructor指向json对象
+		
+		// 遍历对象的可枚举属性
+		for(attr in p1){
+			alert(attr);
+		}
+
+
+	//原型的动态特性　
+			
+		// 正常原型	
+			function Person2(){
+				
+			}
+			var p2 = new Person2();
+			//原型对象的构造器指向构造函数，所以在原型对象之前new一个对象不产生影响
+			Person2.prototype.say = function(){alert('我是方法2!')};
+			p2.say();
+			
+		// 简单原型	
+			function Person3(){
+				
+			}
+			var p3 = new Person3();  // {}
+			//--------------------------------------
+			Person3.prototype = {
+				constructor : Person3 ,	//必须得表示原型对象的构造器
+				say : function(){
+					alert('我是方法3!');
+				}
+			};	
+			
+			p3.say(); // error 原因为构造器被修改，原型对象里面没有任何属性和方法
+			// 结论：简单原型使用的顺序(实例对象必须在原型对象之后创建)
+			var p4 = new Person3();
+			p4.say();
+			
+</script>
+
+</body>
+</html>

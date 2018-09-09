@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+	// isPrototypeOf(new instance); 判断原型对象是否是实例对象的原型
+			
+			
+	// ECMA5: Object.getPrototypeOf(instance): 根据实例对象获取原型对象
+				
+		function Person(){
+			
+		}
+		
+		Person.prototype.name = 'z3'; 
+		Person.prototype.age  = 20 ; 
+		Person.prototype.sayName  = function(){alert('我是原型对象的方法!')}; 
+				
+		
+		var p1 = new Person();
+		var prototypeObj = Object.getPrototypeOf(p1);
+		console.log(prototypeObj);
+		alert(prototypeObj == Person.prototype); //true
+		
+				
+	/* 每次代码读取一个对象的某一属性的时候: 首先会进行一次搜索:搜索实例对象里属性,看看有没有
+	 * 如果没有,再去实例所对应的原型对象里去搜索属性，如果有就返回，没有返回undefined
+	 */
+	
+		var p2 = new Person();
+		p2.name = 'w5';		// 修改实例对象的name，会只进行一次遍历，不搜索原型对象的name了
+		delete p2.name ;  
+		alert(p2.name);		// 结果依次为：w5 z3 实例对象有了name属性，就想获得原型对象的name属性，用delete
+				
+				
+	// 判断一个对象属性 是否属于实例属性
+		
+		var p3 = new Person();
+		p3.name = 'z6';
+		alert(p3.hasOwnProperty('name')); //true
+		
+				
+				
+	// in 操作符 判断属性是否在实例对象和原型对象中
+				
+		var p4 = new Person();
+		alert('name' in p4); // 是否在原型对象中 true
+		var p5 = new Person();
+		p5.name = 'w3';
+		alert('name' in p5); // 是否在实例对象中 true
+	
+				
+				
+	// 根据hasOwnProperty和in操作符自己写方法判断属性是否存在原型中
+
+		// 在原型对象中是否存在某一属性 第一个参数:当前对象 ，第二个参数:要判断的属性
+			
+		function hasPrototypeProperty(object , name){
+			return !object.hasOwnProperty(name) && name in object ;
+		}
+		
+		var p6 = new Person();
+		p6.name = 'xiao A';
+		alert(hasPrototypeProperty(p6,'name'));
+		
+
+				
+	// ECMA5新特性 Object.keys();返回一个数组包括对象的所有属性
+				
+		var p7 = new Person();
+		p7.name = 'z3';
+		p7.age = 20 ; 
+		console.log(Object.keys(p7)); //对象的属性，结果为["name", "age"]
+		console.log(Object.keys(Person.prototype)); //原型对象的所有属性，结果为["name", "age", "sayName"]
+				
+				
+	//ECMA5 constructor属性： 该属性是不能被枚举的，所以Object.keys不能得到constructor属性，用Object.getOwnPropertyNames
+	//Object.getOwnPropertyNames 枚举对象所有的属性 ：不管该内部属性能否被枚举
+		console.log(Object.getOwnPropertyNames(Person.prototype)); //包括constructor在内的所有属性，结果为["constructor", "name", "age", "sayName"]
+</script>
+
+</body>
+</html>

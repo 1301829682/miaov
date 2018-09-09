@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+//用命令模式实现简单的小游戏:点up、down、left、right等按钮命令实现div的上下左右移动，还有一个回退操作的按钮
+
+// 有一个命令接口：俩个方法，一个是执行命令；还有一个是回退命令 
+	var ReversibleCommandInterface = new BH.Interface('ReversibleCommandInterface',['execute','undo']);
+
+//调用者：把命令对象叫做调用者；下面写up、down、left、right等命令对象的类，参数cursor为接受者/执行者
+	var MoveUp = function(cursor){
+		this.cursor = cursor;
+	};
+	MoveUp.prototype ={
+		constructor : MoveUp,
+		//执行
+		execute : function(){
+			this.cursor.move(0,-10); //让接受者调用自己的move方法
+		},
+		//撤销
+		undo : function(){
+			this.cursor.move(0,10);
+		}
+	};
+
+	var MoveDown = function(cursor){
+		this.cursor = cursor;
+	};
+	MoveDown.prototype = {
+		constructor:MoveDown , 
+		execute:function(){
+			this.cursor.move(0,10);
+		},
+		undo:function(){
+			this.cursor.move(0,-10);
+		}
+	};
+
+	var MoveLeft = function(cursor){
+		this.cursor = cursor;
+	};
+	MoveLeft.prototype = {
+		constructor:MoveLeft , 
+		execute:function(){
+			this.cursor.move(-10,0);
+		},
+		undo:function(){
+			this.cursor.move(10,0);
+		}
+	};
+
+	var MoveRight = function(cursor){
+		this.cursor = cursor;
+	};
+	MoveRight.prototype = {
+		constructor:MoveRight , 
+		execute:function(){
+			this.cursor.move(10,0);
+		},
+		undo:function(){
+			this.cursor.move(-10,0);
+		}
+	};
+
+
+
+//接受者/执行者：
+	// HTML5 + ECMA5
+	var Cursor = function(width,height,parent){
+		//宽高代表外层div （canvas画布）
+		this.width = width ; 
+		this.height = height;
+		//移动的元素的具体位置
+		this.position = {
+			x: width/2, 
+			y: height/2
+		};
+		//HTML5创建一个画布,定义画布的宽高
+		this.canvas = document.createElement('canvas');
+		this.canvas.width = this.width;	
+		this.canvas.height = this.height;
+		parent.appendChild(this.canvas);
+		
+		this.ctx = this.canvas.getContext('2d');//canvas上下文元素(画布的核心对象)
+		this.ctx.fillStyle = 'red'; //填充颜色
+		this.move(0,0); //初始化位置 
+	};
+	Cursor.prototype = {
+		constuctor : Cursor,
+		move : function(x,y){
+			this.position.x += x;
+			this.position.y += y;
+			this.ctx.clearRect(0,0,this.width,this.height); //每次重画之前要清空画布
+			this.ctx.fillRect(this.position.x,this.position.y,20,20) //画出画布，参数分别为坐标和宽高
+		}
+	}
+
+
+//装饰者模式：让每一个执行的命令对象加入到命令集合中，用于回溯(撤销)
+	// 装饰命令对象类的实例 两个参数（原始的命令对象[被装饰者]  , 命令集合[数组] ）
+	var UndoDecorator = function(command,undoStack){
+		this.command = command;
+		this.undoStack = undoStack;
+	}
+	UndoDecorator.prototype = {
+		constructor : UndoDecorator,
+		execute : function(){
+			this.undoStack.push(this.command); //加装饰：命令对象加入到命令集合中
+			this.command.execute(); //命令对象为this.command
+		},
+		undo:function(){
+			this.command.undo();
+		}
+	}
+
+
+//四个命令按钮、一个回退按钮操作
+	// 命令按钮类：供实例化命令对象的类
+	var CommandButton = function(label,command,parent){
+		//检验接口
+		BH.Interface.ensureImplements(command,ReversibleCommandInterface);
+		//实例化按钮 并放到父元素上
+		this.element = document.createElement('button');
+		this.element.innerHTML = label; //显示命令按钮名称
+		parent.appendChild(this.element);
+		//添加事件
+		BH.EventUtil.addHandler(this.element,'click',function(){
+			command.execute();
+		})
+	};
+	//回退按钮类
+	var UndoButton = function(label, parent , undoStack){
+		this.element = document.createElement('button');
+		this.element.innerHTML = label ;
+		parent.appendChild(this.element);
+		//添加事件
+		BH.EventUtil.addHandler(this.element,'click',function(){
+			if(undoStack.length === 0 ){
+				alert('已经没有命令了，是最后一步回退操作!');
+				return;
+			}
+			// 把最后一次命令拿出来 然后直接执行回退操作
+			var lastCommand = undoStack.pop();
+			lastCommand.undo();
+		});					
+	}
+
+
+//检查效果：
+	window.onload = function(){
+		var body = document.getElementsByTagName('body')[0];
+		//实例化接受者
+		var cursor = new Cursor(400,400,body);
+		var undoStack = []; //撤销栈为空
+
+		//客户创建命令
+		var upCommand = new UndoDecorator(new MoveUp(cursor),undoStack);
+		var downCommand = new UndoDecorator(new MoveDown(cursor),undoStack);
+		var leftCommand = new UndoDecorator(new MoveLeft(cursor),undoStack);
+		var rightCommand = new UndoDecorator(new MoveRight(cursor),undoStack);
+
+		//实例化命令按钮
+		var upbtn = new CommandButton('up',upCommand,body);
+		var downbtn = new CommandButton('down',downCommand,body);
+		var leftbtn = new CommandButton('left',leftCommand,body);
+		var rightbtn = new CommandButton('right',rightCommand,body);
+		//实例化回退按钮
+		var undobtn = new UndoButton('undo',body,undoStack);
+	}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type=text/javascript charset=utf-8>
+	/*
+		// 3种方式定义函数 
+		
+		// 1 function语句式
+			function test1(){
+				alert('我是test1');
+			}
+			test1();
+		
+		// 2函数的直接量 ECMAScript推荐
+			var test2 = function(){
+			alert('我是test2');
+		}
+		test2();
+		
+		// 3function构造函数式
+			var test3 = new Function("a" , "b" ,"return a+b;");
+			alert(test3(10,20));
+	*/
+	/*
+		区别：		function语句		Function构造函数		函数直接量
+		形式		句子				表达式					表达式
+		名称		有名				匿名					匿名
+		性质		静态				动态					静态
+		解析时机	优先解析			顺序解析				顺序解析
+		作用域		具有函数的作用域	顶级函数(顶级作用域)	具有函数作用域
+	*/	
+	/*
+		//效率对比 function语句式和function构造函数式对比，发现funcition语句式效率快得多，是因为Function构造函数是动态的，只在内存存在一次就销毁，每次执行一次new一次销毁一次，所以优点是不占内存；function语句式常驻内存，速度快并多次使用。
+	
+		var d1 = new Date();
+		var t1 = d1.getTime();
+		for(var i =0 ; i <100000;i++){
+			//function test1(){;}		//时间短
+			var test2 = new Function(); //时间长
+		}
+		var d2 = new Date();
+		var t2 = d2.getTime();
+		alert(t2 -t1); 			
+	*/
+	/*
+		// 解析顺序问题 对于function语句式的函数，javascript解析器会优先的解释
+	
+		test1(); //执行了，test2()放在前面没有执行，是因为预解析，执行之前先找变量和函数，变量赋值null，函数整个保存，之后才会顺序执行赋值操作(函数不会进行赋值操作，跳过函数)
+		function test1(){
+			alert('1111');
+		}
+	
+		//alert(test2); //表示变量声明了 但是没有被赋值 为null
+	
+		test2();
+		var test2 = function(){
+			alert('2222');
+		}
+	*/
+	
+	/*
+		// 结果顺序为4 2 3 3 5 6
+		function f(){return 1;} 				// 函数1 	
+		alert(f());		//返回值为4 说明第1个函数被第4个函数覆盖	
+		var f = new Function("return 2;");		// 函数2 
+		alert(f());		//返回值为2 说明第4个函数被第2个函数覆盖
+		var f = function(){return 3;}			// 函数3 
+		alert(f());	       //返回值为3 说明第2个函数被第3个函数覆盖	
+		function f(){return 4;} 				// 函数4 
+		alert(f());		//返回值为3 说明第4个函数被第3个函数覆盖
+		var f = new Function("return 5"); 		// 函数5 
+		alert(f());	//返回值为5 说明第3个函数被第5个函数覆盖	
+		var f = function(){return 6 ;}			// 函数6 
+		alert(f());		//返回值为6 说明第5个函数被第6个函数覆盖			
+	*/
+	
+	
+	//函数作用域的概念
+	/*
+	var k = 1 ; 
+	function t1(){
+		var k = 2 ; //局部变量 k
+		//function test(){return k ;} 	//function语句
+		//var test = function(){ return k};	//函数直接量
+		//var test = new Function('return k;');	// 构造函数的方式 具有顶级作用域，结果为1
+		alert(test());
+	}
+	t1();			
+	*/
+	
+	
+	
+</script>
+</head>
+<body>
+</body>
+</html>

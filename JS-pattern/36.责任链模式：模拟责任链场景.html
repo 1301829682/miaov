@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+/*责任链（responsibility）模式可以用来消除请求的发送者和接受者之间的耦合。
+责任链模式中的角色：发送者、接受者
+*/
+
+//模拟责任链场景：做项目 -> 项目经理 ->task  项目组[小A,小B,小C,小D]
+	//任务的类(发送者)
+		var Assign = function(task){
+			this.task = task;
+		};
+
+	// 接受任务的类(接受者)
+		var WorkFlow = function(assign){
+			this.assign = assign;
+		};
+		WorkFlow.prototype = {
+			constructor : WorkFlow,
+			//分析当前的任务到底谁能去执行
+			handle : function(handler){
+				for(var i = 0,len = handler.length;i < len;i++){
+					//如果当前的任务正好是你这个人比较擅长的 那就之间执行
+					if(this.assign.task === handler[i].cando){
+						return handler[i].todo();
+					}
+				}
+				return;
+			}
+		};
+
+	//处理者
+		var Executor = function(name,cando){
+			this.name = name; //接受者的姓名
+			this.cando = cando; //擅长的任务
+		};
+		Executor.prototype = {
+			constructor : Executor,
+			todo : function(){
+				document.write(this.name + '开发:' + this.cando);
+			}
+		};
+
+	//实例化4个处理对象
+		var e1 = new Executor('小A','javascript编程');
+		var e2 = new Executor('小B','css编程');
+		var e3 = new Executor('小C','java编程');
+		var e4 = new Executor('小D','sql编程');
+	//实例化发送者
+		var assign = new Assign('javascript编程');
+	//实例化接受者
+		var wf = new WorkFlow(assign);
+		wf.handle([e1,e2,e3,e4]);
+</script>
+</body>
+</html>

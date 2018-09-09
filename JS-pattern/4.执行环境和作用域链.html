@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type=text/javascript charset=utf-8>
+	//1 执行环境 window对象(最上层的执行环境)
+			
+	var color1 = "blue";
+	function changeColor(){ // 每一个函数 都有一个执行环境
+		var color2 = "red";
+		function swapColor(){ // 这个函数 又产生了一个执行环境
+		
+			// color3 3级作用域  color2 2级作用域 color1 1级作用域
+			var color3 = color2; 
+			color2 = color1;
+			color1 = color3;
+			//这里可以访问：color1、2、3
+		}
+		
+		//这里可以访问color1、color2、但不能访问color3
+		swapColor();
+	}
+	//这里只能访问color1
+	changeColor();		 // 作用域 window  第一个作用环境	
+	
+	// 环境变量可以一层一层的向上进行追溯，可以访问它的上级执行环境的变量和函数
+	// 结论：环境变量在本执行环境中没有的时候，会一层一层的像上追溯。=> js优化不能用全局变量，尽量使用本执行环境的变量
+			
+</script>
+</head>
+<body>
+</body>
+</html>

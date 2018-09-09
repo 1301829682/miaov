@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type=text/javascript charset=utf-8>
+	//	call apply  简单的用法:绑定一些函数 用于传递参数 调用 
+
+		function sum(x , y){
+			return x+y;
+		}
+		function call1(num1,num2){
+			return sum.call(this,num1,num2);//this指向call1
+		}
+		function apply1(num1,num2){
+			return sum.apply(this,[num1,num2]);//apply和call区别在于apply参数为数组形式
+		}
+		alert(call1(10,20));
+		alert(apply1(20,40));
+
+			
+	//扩充作用域
+
+		window.color = 'red';
+		var obj = {color:'blue'};
+		function showColor(){
+			alert(this.color);
+		}
+		
+		showColor.call(this); //结果red
+		showColor.call(obj); //结果blue
+	 
+	 	//扩充作用域可以使用本函数之外的变量
+			
+			
+			
+	// call方法的简单模拟与实现
+			
+	//function 方法
+	function test1(a , b){
+		return a+b;
+	}
+	
+	// 自定义的对象
+	function Obj(x, y){
+		this.x = x ; 
+		this.y = y ;
+		return x*y;
+	}
+	
+	var o = new Obj(10 , 20);
+	o.method = test1 ;
+	alert(o.method(o.x , o.y));
+	delete o.method; //这三行代码实现了call方法
+	
+	//alert(test1.call(o,o.x ,o.y));
+			
+</script>
+</head>
+<body>
+</body>
+</html>

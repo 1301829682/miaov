@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+	<!-- 引入的核心js公共文件 -->
+	<script type=text/javascript charset=utf-8 src=CommonUtil.js></script>
+	<script type=text/javascript charset=utf-8 src=jquery-1.8.0.min.js></script>
+</head>
+<body>
+<script type=text/javascript charset=utf-8>
+/*
+桥接模式是一种既能把两个对象连接在一起，又能避免二者间的强耦合的方法。通过“桥”把彼此联系起来，同时又允许他们各自独立变化。
+桥接实例：
+	事件监听回调机制
+	特权函数
+	桥接组织多个单元
+*/
+	$(function(){			
+		// 1前台业务逻辑
+		var inp1 = $('#inp1').get(0);
+		// BH.EventUtil.addHandler为事件监听addEventListener的兼容
+		BH.EventUtil.addHandler(inp1,'click',sendReq);
+
+		//--------------------------------------------------
+		// 2后台业务逻辑
+		function sendReq(){// 处理后台的函数
+			//ajax 参数1 后台服务器的地址 参数2 是一个对象或者一个字符串(参数) 参数3为回调函数，data为服务器传来的数据
+			//$.post('URL',{msg:this.value},function(data){});
+			alert('发送了指定的数据到后台：' + this.value);
+		}
+	});
+
+
+// 事件监听回调机制例子：用户点击一个按钮,向服务器端发送信息
+	$(function(){
+		var inp2 = $('#inp2').get(0);
+		BH.EventUtil.addHandler(inp2,'click',bridgeHandler);
+
+		//--------------------------------------------------
+		// 利用桥模式将1前台业务逻辑和2后台业务逻辑分开
+		function bridgeHandler(){
+			var msg = this.value;
+			sendReq(msg);
+		}
+		//--------------------------------------------------
+
+		function sendReq(msg){
+			//$.post('URL',{msg:this.value},function(data){});
+			alert('利用桥接模式发送了指定的数据到后台：' + msg);
+		}
+	})
+
+</script>
+<input id=inp1 type=button value="我是数据.."  />
+<input id=inp2 type=button value="我是桥接模式的事件监听回调机制"  />
+</body>
+</html>
